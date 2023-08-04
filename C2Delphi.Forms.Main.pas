@@ -13,6 +13,11 @@ uses
   System.Variants,
   System.Classes,
   System.Actions,
+  System.RegularExpressions,
+  System.IOUtils,
+  System.Math,
+
+  ShellAPI,
 
 
   Vcl.Forms,
@@ -28,7 +33,7 @@ uses
   Vcl.ActnMan,
   Vcl.Menus,
 
-  Vcl.Styles.Hooks,
+
   Threading,
   SynEditKeyCmds,
 
@@ -48,7 +53,7 @@ uses
   WvN.Pascal.CReader, Vcl.AppEvnts,
   SynHighlighterPas, SynEditHighlighter, SynHighlighterCpp, SynEdit,
 
-  Vcl.Themes
+  Vcl.Themes, SynEditCodeFolding
 
   ;
 
@@ -135,10 +140,7 @@ implementation
 
 {$R *.dfm}
 
-uses ShellAPI, Math, System.IOUtils, dwsErrors,
-  System.Diagnostics,
-  RegularExpressions
-;
+
 
 
 {$IFDEF USE_DELPHIAST}
@@ -529,8 +531,11 @@ end;
 
 procedure TfrmMain.SearchBox1Change(Sender: TObject);
 begin
-  edCCode.SearchEngine.FindAll(SearchBox1.Text);
-  Caption := Format('Matches:%d', [edCCode.SearchEngine.ResultCount]);;
+  if Trim(SearchBox1.Text) <> EmptyStr then
+    begin
+      edCCode.SearchEngine.FindAll(SearchBox1.Text);
+      Caption := Format('Matches:%d', [edCCode.SearchEngine.ResultCount]);
+    end;
 end;
 
 procedure TfrmMain.TreeView1Change(Sender: TObject; Node: TTreeNode);
